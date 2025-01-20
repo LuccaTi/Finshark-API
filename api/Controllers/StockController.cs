@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
 using api.Dtos;
+using api.Dtos.Stock;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/stock")]
+    [Route("api/[controller]")]//This string is added to the end of the server URL that is hosting the API so the web browser can send http requests to it.
     [ApiController]
     public class StockController : ControllerBase
     {
@@ -24,6 +21,10 @@ namespace api.Controllers
         {
             var stocks = _context?.Stocks?.ToList()
             .Select(s => s.ToStockDto());
+            if(stocks == null)
+            {
+                return NotFound();
+            }
             return Ok(stocks);
         }
 
@@ -41,10 +42,37 @@ namespace api.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateStockRequestDto stockDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest("Insira informações válidas!");
+            }
+
             var stockModel = stockDto.ToStockFromCreateDTO();
             _context.Stocks?.Add(stockModel);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());   
+            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+        {
+            var stockModel = _context.Stocks?.Find(id);
+            if(stockModel == null)
+            {
+                return NotFound();
+            }
+            stockModel.Symbol = updateDto.Symbol;
+            stockModel.CompanyName = updateDto.CompanyName;
+            stockModel.Purchase = updateDto.Purchase;
+            stockModel.LastDiv = updateDto.LastDiv;
+            stockModel.Industry = updateDto.Industry;
+            stockModel.MarketCap = updateDto.MarketCap;
+
+            _context.SaveChanges();
+
+            return Ok(stockModel.ToStockDto());
+
+        }
+               
     }
 }
