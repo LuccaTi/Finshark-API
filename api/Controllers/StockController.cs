@@ -13,7 +13,7 @@ namespace api.Controllers
     public class StockController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IStockRepository _stockRepo;
+        private readonly IStockRepository _stockRepo;//Dependency Injection.
         public StockController(ApplicationDBContext context, IStockRepository stockRepo)
         {
             _context = context;
@@ -23,11 +23,6 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()//Http methods are async, they can happen at the same time and work in diferent ways with the data linked to the API.
         {
-            if (_context == null || _context.Stocks == null)
-            {
-                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
-            }
-
             var stocks = await _stockRepo.GetAllAsync();//Call to the database, it's async because it's slow.
             if(stocks == null)
             {
@@ -40,11 +35,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if (_context == null || _context.Stocks == null)
-            {
-                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
-            }
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepo.GetByIdAsync(id);
             if(stock == null)
             {
                 return NotFound();
@@ -53,43 +44,27 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
+        public async Task<IActionResult> Create([FromBody] CreateStockRequestDto createDto)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest("Insira informações válidas!");
             }
-            if (_context == null || _context.Stocks == null)
-            {
-                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
-            }
 
-            var stockModel = stockDto.ToStockFromCreateDTO();
-            await _context.Stocks.AddAsync(stockModel);
-            await _context.SaveChangesAsync();
+            var stockModel = createDto.ToStockFromCreateDTO();
+            await _stockRepo.CreateAsync(stockModel);
             return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
-            if (_context == null || _context.Stocks == null)
-            {
-                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
-            }
-            var stockModel = await _context.Stocks.FindAsync(id);
+            var stockModel = await _stockRepo.UpdateAsync(id, updateDto);
+
             if(stockModel == null)
             {
                 return NotFound();
             }
-            stockModel.Symbol = updateDto.Symbol;
-            stockModel.CompanyName = updateDto.CompanyName;
-            stockModel.Purchase = updateDto.Purchase;
-            stockModel.LastDiv = updateDto.LastDiv;
-            stockModel.Industry = updateDto.Industry;
-            stockModel.MarketCap = updateDto.MarketCap;
-
-            await _context.SaveChangesAsync();
 
             return Ok(stockModel.ToStockDto());
 
@@ -98,19 +73,11 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (_context == null || _context.Stocks == null)
-            {
-                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
-            }
-            var stockModel = await _context.Stocks.FindAsync(id);
+            var stockModel = await _stockRepo.DeleteAsync(id);
             if(stockModel == null)
             {
                 return NotFound();
             }
-
-            _context.Stocks?.Remove(stockModel);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
                
