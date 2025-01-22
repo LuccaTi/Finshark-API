@@ -1,6 +1,7 @@
 using api.Data;
 using api.Dtos;
 using api.Dtos.Stock;
+using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,26 +13,37 @@ namespace api.Controllers
     public class StockController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public StockController(ApplicationDBContext context)
+        private readonly IStockRepository _stockRepo;
+        public StockController(ApplicationDBContext context, IStockRepository stockRepo)
         {
             _context = context;
+            _stockRepo = stockRepo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll()//Http methods are async, they can happen at the same time and work in diferent ways with the data linked to the API.
         {
-            var stocks = await _context?.Stocks?.ToListAsync();
-            var stocksDto = stocks.Select(s => s.ToStockDto());//Linq used so the return is not the whole entity, only what the user needs to know.
+            if (_context == null || _context.Stocks == null)
+            {
+                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
+            }
+
+            var stocks = await _stockRepo.GetAllAsync();//Call to the database, it's async because it's slow.
             if(stocks == null)
             {
                 return NotFound();
             }
+            var stocksDto = stocks.Select(s => s.ToStockDto());//Linq used so the return is not the whole entity, only what the client needs to know.
             return Ok(stocksDto);   
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if (_context == null || _context.Stocks == null)
+            {
+                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
+            }
             var stock = await _context.Stocks.FindAsync(id);
             if(stock == null)
             {
@@ -47,6 +59,10 @@ namespace api.Controllers
             {
                 return BadRequest("Insira informações válidas!");
             }
+            if (_context == null || _context.Stocks == null)
+            {
+                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
+            }
 
             var stockModel = stockDto.ToStockFromCreateDTO();
             await _context.Stocks.AddAsync(stockModel);
@@ -57,6 +73,10 @@ namespace api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
+            if (_context == null || _context.Stocks == null)
+            {
+                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
+            }
             var stockModel = await _context.Stocks.FindAsync(id);
             if(stockModel == null)
             {
@@ -78,6 +98,10 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (_context == null || _context.Stocks == null)
+            {
+                return Problem("Database context is not available or DbSet is null."); // Mensagem de erro genérica
+            }
             var stockModel = await _context.Stocks.FindAsync(id);
             if(stockModel == null)
             {
