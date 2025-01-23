@@ -171,3 +171,7 @@ C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\tr\Microsoft.CodeAnaly
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
