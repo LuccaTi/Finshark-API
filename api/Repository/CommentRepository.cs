@@ -67,22 +67,20 @@ namespace api.Repository
             return await _context.Comments.FindAsync(id);
         }
 
-        public async Task<Comment?> UpdateAsync(int id, UpdateCommentRequestDto updateDto)
+        public async Task<Comment?> UpdateAsync(int id, Comment updateDto)
         {
             if (_context.Comments == null)
             {
                 throw new InvalidOperationException("Comments is not initialized in the DbContext.");
             }
 
-            var existingComment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            var existingComment = await _context.Comments.FindAsync(id);
             if (existingComment == null)
             {
                 return null;
             }
             existingComment.Title = updateDto.Title;
             existingComment.Content = updateDto.Content;
-            existingComment.CreatedOn = updateDto.CreatedOn;
-            existingComment.StockId = updateDto.StockId;
 
             await _context.SaveChangesAsync();
 

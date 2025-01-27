@@ -68,7 +68,7 @@ namespace api.Controllers
                 return BadRequest("Insert valid information!");
             }
 
-            var comment = await _commentRepo.UpdateAsync(id, updateDto);
+            var comment = await _commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdateDto());
             if (comment == null)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace api.Controllers
             var comment = await _commentRepo.DeleteAsync(id);
             if (comment == null)
             {
-                return NotFound();
+                return NotFound("Comment does not exist!");
             }
 
             return NoContent();

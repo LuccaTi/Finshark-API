@@ -74,13 +74,13 @@ namespace api.Repository
             return _context.Stocks.AnyAsync(s => s.Id == id);//AnyAsync returns a bool, unlike Find() and FirstOrDefaultAsync().
         }
 
-        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateDto)
+        public async Task<Stock?> UpdateAsync(int id, Stock updateDto)
         {
             if (_context.Stocks == null)
             {
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
-            var existingStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var existingStock = await _context.Stocks.FindAsync(id);
             if (existingStock == null)
             {
                 return null;

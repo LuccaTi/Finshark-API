@@ -62,7 +62,7 @@ namespace api.Controllers
                 return BadRequest("Insert valid information!");
             }
 
-            var stockModel = await _stockRepo.UpdateAsync(id, updateDto);
+            var stockModel = await _stockRepo.UpdateAsync(id, updateDto.ToStockFromUpdateDto());
 
             if (stockModel == null)
             {
@@ -79,7 +79,7 @@ namespace api.Controllers
             var stockModel = await _stockRepo.DeleteAsync(id);
             if (stockModel == null)
             {
-                return NotFound();
+                return NotFound("Stock does not exist!");
             }
             return NoContent();
         }
