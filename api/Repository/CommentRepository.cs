@@ -26,7 +26,7 @@ namespace api.Repository
                 throw new InvalidOperationException("Comments is not initialized in the DbContext.");
             }
             await _context.Comments.AddAsync(commentModel);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();  
             return commentModel;
         }
 

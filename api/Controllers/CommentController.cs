@@ -11,10 +11,12 @@ namespace api.Controllers
     {
 
         private readonly ICommentRepository _commentRepo;//Dependency Injection.
-        public CommentController(ICommentRepository commentRepo)
+        private readonly IStockRepository _stockRepo;
+        public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
         {
 
             _commentRepo = commentRepo;
+            _stockRepo = stockRepo;
         }
 
         [HttpGet]
@@ -41,16 +43,21 @@ namespace api.Controllers
             return Ok(comment.ToCommentDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateCommentRequestDto createDto)
+        [HttpPost("{stockId}")]//Stock Id is necessary because the comment (fk) can't exist in this context without a stock (Pk).
+        public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentRequestDto createDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Insert valid information!");
             }
-            var comment = createDto.ToCommentFromCreateDto();
-            await _commentRepo.CreateAsync(comment);
-            return CreatedAtAction(nameof(GetById), new { id = comment.Id }, comment.ToCommentDto());
+            if(!await _stockRepo.StockExists(stockId))
+            {
+                return BadRequest("Stock does not exist!");
+            }
+
+            var commentModel = createDto.ToCommentFromCreateDto(stockId);
+            await _commentRepo.CreateAsync(commentModel);
+            return CreatedAtAction(nameof(GetById), new { id = commentModel.Id}, commentModel.ToCommentDto());  
         }
 
         [HttpPut("{id}")]

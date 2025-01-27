@@ -53,7 +53,7 @@ namespace api.Repository
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
 
-            return await _context.Stocks.Include(c => c.Comments).ToListAsync();//Dependency used to access the database context.
+            return await _context.Stocks.Include(s => s.Comments).ToListAsync();//Dependency used to access the database context.
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
@@ -62,7 +62,16 @@ namespace api.Repository
             {
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
-            return await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public Task<bool> StockExists(int id)
+        {
+             if (_context.Stocks == null)
+            {
+                throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
+            }
+            return _context.Stocks.AnyAsync(s => s.Id == id);//AnyAsync returns a bool, unlike Find() and FirstOrDefaultAsync().
         }
 
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateDto)
