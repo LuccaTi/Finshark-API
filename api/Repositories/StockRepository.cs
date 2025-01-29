@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
-using api.Dtos.Stock;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace api.Repository
+namespace api.Repositories
 {
-    public class StockRepository : IStockRepository//Interface is implemented because of dependency injection on the controller.
+    public class StockRepository : IStockRepository
     {
         private readonly ApplicationDBContext _context;
 
         public StockRepository(ApplicationDBContext context)
         {
-            _context = context;//Dependency injected.
+            _context = context;
         }
 
-        public async Task<Stock> CreateAsync(Stock stockModel)//The model is received through the requests in the controller.
+        public async Task<Stock> CreateStockAsync(Stock stockModel)
         {
             if (_context.Stocks == null)
             {
@@ -30,33 +29,33 @@ namespace api.Repository
             return stockModel;
         }
 
-        public async Task<Stock?> DeleteAsync(int id)
+        public async Task<bool> DeleteStockAsync(int id)
         {
             if (_context.Stocks == null)
             {
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stockModel = await _context.Stocks.FindAsync(id);
             if (stockModel == null)
             {
-                return null;
+                return false;
             }
             _context.Stocks?.Remove(stockModel);
             await _context.SaveChangesAsync();
-            return stockModel;
+            return true;
         }
 
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllStocksAsync()
         {
             if (_context.Stocks == null)
             {
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
 
-            return await _context.Stocks.Include(s => s.Comments).ToListAsync();//Dependency used to access the database context.
+            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
         }
 
-        public async Task<Stock?> GetByIdAsync(int id)
+        public async Task<Stock?> GetStockByIdAsync(int id)
         {
             if (_context.Stocks == null)
             {
@@ -67,14 +66,14 @@ namespace api.Repository
 
         public Task<bool> StockExists(int id)
         {
-             if (_context.Stocks == null)
+            if (_context.Stocks == null)
             {
                 throw new InvalidOperationException("Stocks is not initialized in the DbContext.");
             }
-            return _context.Stocks.AnyAsync(s => s.Id == id);//AnyAsync returns a bool, unlike Find() and FirstOrDefaultAsync().
+            return _context.Stocks.AnyAsync(s => s.Id == id);
         }
 
-        public async Task<Stock?> UpdateAsync(int id, Stock updateDto)
+        public async Task<Stock?> UpdateStockAsync(int id, Stock stockModel)
         {
             if (_context.Stocks == null)
             {
@@ -85,12 +84,12 @@ namespace api.Repository
             {
                 return null;
             }
-            existingStock.Symbol = updateDto.Symbol;
-            existingStock.CompanyName = updateDto.CompanyName;
-            existingStock.Purchase = updateDto.Purchase;
-            existingStock.LastDiv = updateDto.LastDiv;
-            existingStock.Industry = updateDto.Industry;
-            existingStock.MarketCap = updateDto.MarketCap;
+            existingStock.Symbol = stockModel.Symbol;
+            existingStock.CompanyName = stockModel.CompanyName;
+            existingStock.Purchase = stockModel.Purchase;
+            existingStock.LastDiv = stockModel.LastDiv;
+            existingStock.Industry = stockModel.Industry;
+            existingStock.MarketCap = stockModel.MarketCap;
 
             await _context.SaveChangesAsync();
 

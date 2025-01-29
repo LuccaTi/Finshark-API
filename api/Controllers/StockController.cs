@@ -2,56 +2,55 @@ using api.Dtos;
 using api.Dtos.Stock;
 using api.Interfaces;
 using api.Mappers;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]//This string is added to the end of the server URL that is hosting the API so the web browser can send http requests to it.
+    [Route("api/[controller]")]
     [ApiController]
     public class StockController : ControllerBase
     {
-
-        private readonly IStockRepository _stockRepo;//Dependency Injection.
-        public StockController(IStockRepository stockRepo)
+        
+        private readonly IStockService _stockService;
+        public StockController(IStockService stockService)
         {
 
-            _stockRepo = stockRepo;
+            _stockService = stockService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()//Http methods are async, they can happen at the same time and work in diferent ways with the data linked to the API.
+        public async Task<IActionResult> GetAll()
         {
-            var stocks = await _stockRepo.GetAllAsync();//Call to the database, it's async because it's slow.
+            var stocks = await _stockService.GetAllStocksAsync();
             if (stocks == null)
             {
                 return NotFound();
             }
-            var stocksDto = stocks.Select(s => s.ToStockDto());//Linq used so the return is not the whole entity, only what the client needs to know.
-            return Ok(stocksDto);
+            return Ok(stocks);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var stock = await _stockRepo.GetByIdAsync(id);
+            var stock = await _stockService.GetStockByIdAsync(id);
             if (stock == null)
             {
                 return NotFound();
             }
-            return Ok(stock.ToStockDto());
+            return Ok(stock);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateStockRequestDto createDto)
+        public async Task<IActionResult> Create([FromBody] CreateStockRequestDto createStockRequestDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Insert valid information!");
             }
 
-            var stockModel = createDto.ToStockFromCreateDTO();
-            await _stockRepo.CreateAsync(stockModel);
-            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
+            var stockModel = await _stockService.CreateStockAsync(createStockRequestDto);
+            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel);
         }
 
         [HttpPut("{id}")]
@@ -62,22 +61,22 @@ namespace api.Controllers
                 return BadRequest("Insert valid information!");
             }
 
-            var stockModel = await _stockRepo.UpdateAsync(id, updateDto.ToStockFromUpdateDto());
+            var stockModel = await _stockService.UpdateStockAsync(id, updateDto);
 
             if (stockModel == null)
             {
                 return NotFound();
             }
 
-            return Ok(stockModel.ToStockDto());
+            return Ok(stockModel);
 
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var stockModel = await _stockRepo.DeleteAsync(id);
-            if (stockModel == null)
+            var success = await _stockService.DeleteStockAsync(id);
+            if (!success)
             {
                 return NotFound("Stock does not exist!");
             }

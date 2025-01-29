@@ -1,8 +1,9 @@
 using api.Data;
-using api.Repository;
+using api.Repositories;
 using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 //Dependencies injection.
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 var app = builder.Build();
 
