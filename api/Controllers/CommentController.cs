@@ -1,3 +1,4 @@
+using api.Dtos;
 using api.Dtos.Comment;
 using api.Interfaces;
 using api.Mappers;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/comment")]
     [ApiController]
     public class CommentController : ControllerBase
     {
@@ -27,7 +28,7 @@ namespace api.Controllers
             return Ok(comments);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var comment = await _commentService.GetCommentByIdAsync(id);
@@ -39,14 +40,18 @@ namespace api.Controllers
             return Ok(comment);
         }
 
-        [HttpPost("{stockId}")]
-        public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentRequestDto createDto)
+        [HttpPost("{stockId:int}")]
+        public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentRequestDto createCommentRequestDto)
         {
+            if(createCommentRequestDto == null)
+            {
+                return BadRequest("Create data is required.");
+            }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Insert valid information!");
+                return BadRequest(ModelState);
             }
-            var createdComment = await _commentService.CreateCommentAsync(stockId, createDto);
+            var createdComment = await _commentService.CreateCommentAsync(stockId, createCommentRequestDto);
             if(createdComment == null)
             {
                 return BadRequest($"Stock with id #{stockId} does not exist!");
@@ -54,25 +59,29 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdComment.Id}, createdComment);  
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateCommentRequestDto)
         {
+            if(updateCommentRequestDto == null)
+            {
+                return BadRequest("Update data is required.");
+            }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Insert valid information!");
+                return BadRequest(ModelState);
             }
 
-            var updatedComment = await _commentService.UpdateCommentAsync(id, updateDto);
+            var updatedComment = await _commentService.UpdateCommentAsync(id, updateCommentRequestDto);
             if (updatedComment == null)
             {
-                return NotFound();
+                return NotFound($"Comment with id #{id} not found.");
             }
 
             return Ok(updatedComment);
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var success = await _commentService.DeleteCommentAsync(id);

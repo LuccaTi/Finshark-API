@@ -175,3 +175,4 @@ C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.J
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll

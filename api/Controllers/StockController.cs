@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/stock")]
     [ApiController]
     public class StockController : ControllerBase
     {
-        
+
         private readonly IStockService _stockService;
         public StockController(IStockService stockService)
         {
@@ -30,7 +30,7 @@ namespace api.Controllers
             return Ok(stocks);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var stock = await _stockService.GetStockByIdAsync(id);
@@ -44,35 +44,43 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDto createStockRequestDto)
         {
+            if(createStockRequestDto == null)
+            {
+                return BadRequest("Create data is required.");
+            }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Insert valid information!");
+                return BadRequest(ModelState);
             }
 
-            var stockModel = await _stockService.CreateStockAsync(createStockRequestDto);
-            return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel);
+            var createdStock = await _stockService.CreateStockAsync(createStockRequestDto);
+            return CreatedAtAction(nameof(GetById), new { id = createdStock.Id }, createdStock);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockRequestDto)
         {
+            if (updateStockRequestDto == null)
+            {
+                return BadRequest("Update data is required.");
+            }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Insert valid information!");
+                return BadRequest(ModelState);
             }
 
-            var stockModel = await _stockService.UpdateStockAsync(id, updateDto);
+            var updatedStock = await _stockService.UpdateStockAsync(id, updateStockRequestDto);
 
-            if (stockModel == null)
+            if (updatedStock == null)
             {
-                return NotFound();
+                return NotFound($"Stock with id #{id} not found.");
             }
 
-            return Ok(stockModel);
+            return Ok(updatedStock);
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var success = await _stockService.DeleteStockAsync(id);
