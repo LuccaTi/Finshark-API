@@ -1,9 +1,11 @@
 using api.Data;
 using api.Repositories;
 using api.Interfaces;
+using api.Services;
+using api.Examples.Stock;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using api.Services;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Finshark api",
+        Version = "v1"
+    });
+    options.EnableAnnotations();
+    options.ExampleFilters();
+});
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -28,6 +39,7 @@ builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateStockRequestExample>();
 
 var app = builder.Build();
 
