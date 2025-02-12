@@ -3,6 +3,7 @@ using api.Dtos.Stock;
 using api.Interfaces;
 using api.Mappers;
 using api.Services;
+using api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -20,9 +21,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
         {
-            var stocks = await _stockService.GetAllStocksAsync();
+            var stocks = await _stockService.GetAllStocksAsync(queryObject);
             if (stocks == null)
             {
                 return NotFound();

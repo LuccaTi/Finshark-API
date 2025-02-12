@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos;
 using api.Dtos.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -32,9 +33,9 @@ namespace api.Services
             return success;
         }
 
-        public async Task<List<StockDto>> GetAllStocksAsync()
+        public async Task<List<StockDto>> GetAllStocksAsync(QueryObject queryObject)
         {
-            var stocks = await _stockRepo.GetAllStocksAsync();
+            var stocks = await _stockRepo.GetAllStocksAsync(queryObject);
             var stocksDto = stocks.Select(s => s.ToStockDto());
             return stocksDto.ToList();
 

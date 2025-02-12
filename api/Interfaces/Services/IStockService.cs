@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using api.Dtos;
 using api.Dtos.Stock;
 using api.Models;
+using api.Helpers;
 
 namespace api.Services
 {
     public interface IStockService
     {
-        public Task<List<StockDto>> GetAllStocksAsync();
+        public Task<List<StockDto>> GetAllStocksAsync(QueryObject queryObject);
         public Task<StockDto?> GetStockByIdAsync(int id);
         public Task<StockDto> CreateStockAsync(CreateStockRequestDto createStockRequestDto);
         public Task<StockDto?> UpdateStockAsync(int id, UpdateStockRequestDto updateStockRequestDto);
