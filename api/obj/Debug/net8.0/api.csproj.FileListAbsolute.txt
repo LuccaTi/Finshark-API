@@ -179,3 +179,5 @@ C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Scrutor.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\lucca\source\repos\Finshark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
