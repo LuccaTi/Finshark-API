@@ -6,28 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Stock_StockId",
-                table: "Comments");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Stock",
-                table: "Stock");
-
-            migrationBuilder.RenameTable(
-                name: "Stock",
-                newName: "Stocks");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Stocks",
-                table: "Stocks",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -65,6 +48,24 @@ namespace api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stocks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Symbol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Purchase = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    LastDiv = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Industry = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MarketCap = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,6 +174,27 @@ namespace api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StockId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Stocks_StockId",
+                        column: x => x.StockId,
+                        principalTable: "Stocks",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -212,21 +234,15 @@ namespace api.Migrations
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comments_Stocks_StockId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_StockId",
                 table: "Comments",
-                column: "StockId",
-                principalTable: "Stocks",
-                principalColumn: "Id");
+                column: "StockId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Stocks_StockId",
-                table: "Comments");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -243,30 +259,16 @@ namespace api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Stocks",
-                table: "Stocks");
-
-            migrationBuilder.RenameTable(
-                name: "Stocks",
-                newName: "Stock");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Stock",
-                table: "Stock",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comments_Stock_StockId",
-                table: "Comments",
-                column: "StockId",
-                principalTable: "Stock",
-                principalColumn: "Id");
+            migrationBuilder.DropTable(
+                name: "Stocks");
         }
     }
 }

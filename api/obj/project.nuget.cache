@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cm3mip2caSM=",
+  "dgSpecHash": "xq2mSkBbpVw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lucca\\source\\repos\\Finshark\\api\\api.csproj",
+  "projectFilePath": "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lucca\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\lucca\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
