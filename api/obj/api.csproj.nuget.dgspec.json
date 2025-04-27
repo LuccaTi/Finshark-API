@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\api.csproj": {}
+    "C:\\Users\\tirel\\OneDrive\\Área de Trabalho\\Sistemas\\ws-vscode\\Finshark-API\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\api.csproj": {
+    "C:\\Users\\tirel\\OneDrive\\Área de Trabalho\\Sistemas\\ws-vscode\\Finshark-API\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\tirel\\OneDrive\\Área de Trabalho\\Sistemas\\ws-vscode\\Finshark-API\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\api.csproj",
-        "packagesPath": "C:\\Users\\lucca\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lucca\\source\\repos\\Finshark-API\\api\\obj\\",
+        "projectPath": "C:\\Users\\tirel\\OneDrive\\Área de Trabalho\\Sistemas\\ws-vscode\\Finshark-API\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\tirel\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\tirel\\OneDrive\\Área de Trabalho\\Sistemas\\ws-vscode\\Finshark-API\\api\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\lucca\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\tirel\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -65,19 +57,19 @@
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.0.11, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.Extensions.Identity.Core": {
               "target": "Package",
@@ -97,7 +89,7 @@
             },
             "Swashbuckle.AspNetCore.Filters": {
               "target": "Package",
-              "version": "[8.0.2, )"
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -119,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
